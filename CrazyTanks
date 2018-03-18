@@ -1,0 +1,153 @@
+
+//
+
+#include "stdafx.h"
+#include <iostream>
+#include <windows.h>
+#include <conio.h> 
+
+using namespace std;
+bool gameOver;
+const int width = 20;
+const int height = 20;
+int x, y, tankX, tankY, score;
+enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN,SHOT};
+eDirection dir;
+
+
+void Setup() {
+	gameOver = false;
+	dir = STOP;
+	x = width / 2 - 1;
+	y = height / 2 - 1;
+	tankX = rand() % width;
+	tankY = rand() % height;
+
+
+}
+
+void Draw() {
+	Sleep(300);
+	system("cls");
+
+	for (int i = 0; i < width + 1; i++) cout << "+";
+	cout << endl;
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			if (j == 0 || j == width - 1) cout << "+";
+
+			if (i == y && j == x)
+				cout << "@";
+			else if (i == tankY+rand()%20 && j == tankX + rand() % 18) {
+				
+				cout << "&";
+				
+			}
+			else {
+				bool print = false;
+				
+
+				if (!print)
+					cout << " ";
+
+			}
+		}
+		cout << endl;
+	}
+
+	for (int i = 0; i < width + 1; i++) cout << "+";
+	cout << endl;
+	cout << "Score: " << score << endl;
+
+}
+
+void Input() {
+
+	if (_kbhit()) {
+		switch (_getch())
+		{
+		case 75:
+			dir = LEFT;
+			break;
+		case 77:
+			dir = RIGHT;
+			break;
+		case 72:
+			dir = UP;
+			break;
+		case 80:
+			dir = DOWN;
+			break;
+		case 32:
+			dir = SHOT;
+			break;
+		
+		case 'x':
+
+			gameOver = true;
+			break;
+		}
+	}
+}
+
+void Logic() {
+	
+	switch (dir)
+	{
+	case LEFT:
+		x--;
+		dir = STOP;
+		break;
+	case RIGHT:
+		x++;
+		dir = STOP;
+		break;
+	case UP:
+		y--;
+		dir = STOP;
+		break;
+	case DOWN:
+		y++;
+		dir = STOP;
+		break;
+	case SHOT:
+		cout << "BO!";
+
+	}
+
+	if (x >= width - 1)
+		x = 0;
+	
+	else if (x < 0)
+		x = width - 2;
+
+	if (y >= height)
+		y = 0;
+	else if (y < 0)
+		y = height - 1;
+
+	
+	if (x == tankX && y == tankY) {
+		score += 10;
+		tankX = rand() % width;
+		tankY = rand() % height;
+		
+	}
+}
+
+int main()
+{
+	system("color a");
+	Setup();
+	while (!gameOver) {
+		Draw();
+		Input();
+		Logic();
+
+	}
+
+	cout << "GAMEOVER";
+	system("pause");
+	return 0;
+}
